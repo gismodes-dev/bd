@@ -17,10 +17,12 @@
             background-position: center;
             background-repeat: no-repeat;
             margin: 0;
+            overflow: hidden;
         }
         .container {
             position: relative;
             height: 100%;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,17 +36,32 @@
             background-color: rgba(255, 111, 97, 0.7);
             padding: 20px 40px;
             border-radius: 15px;
+            z-index: 1;
         }
         .moving-button {
             position: absolute;
             transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 12px 24px;
+            z-index: 2;
+            touch-action: none; /* Prevents default touch behaviors */
+        }
+        @media (max-width: 768px) {
+            .message {
+                font-size: 2.5rem;
+                padding: 15px 30px;
+            }
+            .moving-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="message">Buenos Días Linda 😘</div>
-        <button class="btn btn-primary moving-button" id="movingButton">¡Si me das Click te doy un besito!</button>
+        <button class="btn btn-primary moving-button" id="movingButton">¡Tócame para un besito!</button>
     </div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -52,19 +69,36 @@
         const button = document.getElementById('movingButton');
         const container = document.querySelector('.container');
 
-        button.addEventListener('mouseenter', () => {
+        function moveButton() {
             const containerRect = container.getBoundingClientRect();
             const buttonRect = button.getBoundingClientRect();
 
-            const maxX = containerRect.width - buttonRect.width;
-            const maxY = containerRect.height - buttonRect.height;
+            // Ensure button stays within container with padding
+            const padding = 20;
+            const maxX = containerRect.width - buttonRect.width - padding;
+            const maxY = containerRect.height - buttonRect.height - padding;
+            const minX = padding;
+            const minY = padding;
 
-            const newX = Math.random() * maxX;
-            const newY = Math.random() * maxY;
+            // Generate random position within bounds
+            const newX = minX + Math.random() * (maxX - minX);
+            const newY = minY + Math.random() * (maxY - minY);
 
             button.style.left = `${newX}px`;
             button.style.top = `${newY}px`;
+        }
+
+        // Handle touch start event
+        button.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent default touch behaviors
+            moveButton();
         });
+
+        // Fallback for mouse hover (for non-touch devices)
+        button.addEventListener('mouseenter', moveButton);
+
+        // Initialize button position
+        moveButton();
     </script>
 </body>
 </html>
