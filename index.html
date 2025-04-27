@@ -18,6 +18,13 @@
             background-repeat: no-repeat;
             margin: 0;
         }
+        .container {
+            position: relative;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .message {
             font-size: 4rem;
             font-weight: bold;
@@ -28,13 +35,36 @@
             padding: 20px 40px;
             border-radius: 15px;
         }
+        .moving-button {
+            position: absolute;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="message">Buenos Días Linda 😘</div>
+        <button class="btn btn-primary moving-button" id="movingButton">¡Si me das Click te doy un besito!</button>
     </div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const button = document.getElementById('movingButton');
+        const container = document.querySelector('.container');
+
+        button.addEventListener('mouseenter', () => {
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = button.getBoundingClientRect();
+
+            const maxX = containerRect.width - buttonRect.width;
+            const maxY = containerRect.height - buttonRect.height;
+
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+
+            button.style.left = `${newX}px`;
+            button.style.top = `${newY}px`;
+        });
+    </script>
 </body>
 </html>
